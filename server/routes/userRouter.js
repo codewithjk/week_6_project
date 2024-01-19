@@ -1,23 +1,15 @@
 const express = require("express");
 const router = express();
-const service = require("../services/userRender");
 
-const controller = require("../controller/controller");
+const controller = require("../controller/userController");
 
-router.get("/", service.indexRoutes);
-router.post("/login", (res, req) => {});
-router.get("/signup", (req, res) => {
-  res.render("signup");
-});
-router.post("/signup", (req, res) => {
-  res.redirect("/home");
-});
-router.get("/home", (req, res) => {
-  res.render("home");
-});
+router.get("/", controller.indexRender);
+router.get("/signup", controller.signupRender);
+// router.get("/allusers", controller.findall);
+router.get("/home", controller.homeRender);
 
 //API
-router.post("/api/adduser", controller.create);
-router.get("/api/allusers", controller.find);
+router.post("/register", controller.create);
+router.post("/login", controller.login);
 
 module.exports = router;

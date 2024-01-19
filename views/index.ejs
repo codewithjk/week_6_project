@@ -15,16 +15,18 @@
         <div
           class="col-lg-6 h-100 d-flex align-items-center justify-content-center"
         >
-          <form class="bg-white rounded p-5">
+          <form class="bg-white rounded p-5" action="/login" method="post">
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label"
                 >Email address</label
               >
               <input
+                name="email"
                 type="email"
                 class="form-control"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
+                required
               />
               <div id="emailHelp" class="form-text">
                 We'll never share your email with anyone else.
@@ -35,10 +37,15 @@
                 >Password</label
               >
               <input
+                name="password"
                 type="password"
                 class="form-control"
                 id="exampleInputPassword1"
+                required
               />
+              <% if (locals.invalidEmail) { %>
+              <p class="text-danger"><%= invalidEmail %></p>
+              <% } %>
             </div>
 
             <button type="submit" class="btn btn-primary">Login</button>

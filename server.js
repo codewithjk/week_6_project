@@ -3,8 +3,12 @@ const app = express();
 const morgan = require("morgan");
 const port = process.env.PORT || 3000;
 const path = require("path");
-const router = require("./server/routes/userRouter");
+const userRouter = require("./server/routes/userRouter");
+const adminRouter = require("./server/routes/adminRouter");
 const connectDB = require("./server/database/connection");
+const session = require("express-session");
+const nocache = require("nocache");
+const { v4: uuidv4 } = require("uuid");
 
 //log request
 app.use(morgan("tiny"));
@@ -19,8 +23,20 @@ app.set("view engine", "ejs");
 
 //load static assets
 app.use("/static", express.static(path.resolve(__dirname, "assets")));
+//prevent backward
+app.use(nocache());
+//sessiion middleware
+app.use(
+  session({
+    secret: uuidv4(),
+    resave: true,
+    saveUninitialized: true,
+    // cookie: { maxAge: 600000 }, // session timeout of 60 seconds
+  })
+);
 
-app.use("/", router);
+app.use("/admin", adminRouter);
+app.use("/", userRouter);
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);

@@ -1,0 +1,41 @@
+<%- include('head') -%>
+<div class="bg-primary">
+    <h1 class="text-center py-4">Admin Dashboard</h1>
+
+</div>
+<section>
+  <div class="container">
+    <div class="p-2 w-100 ">
+    <!-- User List -->
+    <div class=" row  p-1 rounded bg-info d-flex align-items-center justify-content-center ">
+        <p class="col-2 p-1 m-0 "> S.No</p>
+        <p class="col-2 p-1 m-0 text-start"> Name</p>
+        <p class="col-2 p-1 m-0 text-start"> Email</p>
+        <p class="col-2 p-1 m-0 text-start">Password</p>
+        <p class="col-2 p-1 m-0 text-start"><a href="/admin/adduser/" class="edit-user-button">Add user</a> </p>
+    </div>
+  
+  <% for(let i=0; i<users.length; i++) { %>
+    <div class=" row bg-body-secondary my-1 p-1 rounded d-flex align-items-center justify-content-center ">
+      <p class="col-2 p-1 m-0 text-start"><%= i + 1 %></p>
+      <p class="col-2 p-1 m-0 text-start"><%= users[i].name %></p>
+      <p class="col-2 p-1 m-0 text-start"><%= users[i].email %></p>
+      <p class="col-2 p-1 m-0 text-start"><%= users[i].password %></p>
+
+      <!-- User Actions -->
+      
+      <div class=" col-2">
+        <!-- Edit User Button -->
+        <a href="/admin/edituser/?id=<%= users[i]._id %>" class="edit-user-button">Edit</a>
+    <!-- </div> -->
+        <!-- Delete User Button  -->
+        <!-- <div class="col-2"> -->
+        <a href="/admin/deleteuser/?id=<%= users[i]._id %>" class="delete-user-button" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+    </div>
+
+    </div>
+  <% } %>
+</div>
+  </div>
+</section>
+<%- include('foot') -%>
