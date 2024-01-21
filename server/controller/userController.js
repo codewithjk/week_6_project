@@ -36,41 +36,37 @@ exports.login = (req, res) => {
   dbOperation
     .findUserByEmail(email)
     .then((data) => {
-      if (password === data[0].password) {
-        // res.send(data[0].password);
-        req.session.isLoggedIn = true;
-        req.session.user = data[0];
-        res.redirect("/home");
+      if (data.length < 1) {
+        res.render("index", { invalidEmail: "email not found" });
       } else {
-        res.render("index", { invalidEmail: "Invalid password" });
+        if (password === data[0].password) {
+          // res.send(data[0].password);
+          req.session.isLoggedIn = true;
+          req.session.user = data[0];
+          res.redirect("/home");
+          res.end();
+        } else {
+          res.render("index", { invalidEmail: "Invalid password" });
+        }
       }
     })
     .catch((error) => {
       throw error;
     });
 };
-//---------------------------------------------------------------------------------------
-//find all data
-// exports.findall = (req, res) => {
-//   User.find()
-//     .then((data) => {
-//       res.send(data);
-//     })
-//     .catch((error) => {
-//       res.status(500).send({
-//         message: error.message,
-//       });
-//     });
-// };
 
 exports.indexRender = (req, res) => {
-  res.render("index");
+  if (req.session.user) {
+    res.redirect("/home");
+  } else {
+    res.render("index");
+  }
 };
 exports.homeRender = (req, res) => {
   if (req.session.user) {
     res.render("home", { user: req.session.user });
   } else {
-    res.send("unotherized user");
+    res.redirect("/");
   }
 };
 exports.signupRender = (req, res) => {
@@ -78,5 +74,12 @@ exports.signupRender = (req, res) => {
     res.redirect("/home");
   } else {
     res.render("signup");
+  }
+};
+exports.loginRender = (req, res) => {
+  if (req.session.user) {
+    res.redirect("/home");
+  } else {
+    res.redirect("/");
   }
 };

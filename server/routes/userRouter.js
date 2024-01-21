@@ -5,8 +5,8 @@ const controller = require("../controller/userController");
 
 router.get("/", controller.indexRender);
 router.get("/signup", controller.signupRender);
-// router.get("/allusers", controller.findall);
 router.get("/home", controller.homeRender);
+router.get("/login", controller.loginRender);
 
 //API
 router.post("/register", controller.create);

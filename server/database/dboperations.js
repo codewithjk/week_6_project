@@ -71,6 +71,15 @@ const findAdminByEmail = async (userEmail) => {
     throw error;
   }
 };
+//Function for search users
+const searchUsers = async (pattern) => {
+  try {
+    const users = await User.find({ name: { $regex: pattern } });
+    return users;
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
   createUser,
@@ -80,4 +89,5 @@ module.exports = {
   findUserByEmail,
   findAdminByEmail,
   findAllUsers,
+  searchUsers,
 };

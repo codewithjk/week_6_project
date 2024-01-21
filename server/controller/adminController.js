@@ -8,14 +8,26 @@ exports.getadmin = (req, res) => {
   }
 };
 exports.loginRender = (req, res) => {
-  res.render("adminLogin");
+  if (req.session.admin) {
+    res.redirect("/admin/dashboard");
+  } else {
+    res.render("adminLogin");
+  }
 };
 
 exports.dashboardRender = (req, res) => {
   if (req.session.admin) {
-    dbOperation.findAllUsers().then((data) => {
-      res.render("dashboard", { users: data });
-    });
+    if (req.query.search) {
+      const searchString = req.query.search;
+      const regexPattern = new RegExp(searchString, "i");
+      dbOperation.searchUsers(regexPattern).then((data) => {
+        res.render("dashboard", { users: data });
+      });
+    } else {
+      dbOperation.findAllUsers().then((data) => {
+        res.render("dashboard", { users: data });
+      });
+    }
   } else {
     res.redirect("/admin");
   }
@@ -42,14 +54,22 @@ exports.adminLogin = (req, res) => {
 };
 
 exports.renderAddUserForm = (req, res) => {
-  res.render("addUserForm");
+  if (req.session.admin) {
+    res.render("addUserForm");
+  } else {
+    res.redirect("/admin");
+  }
 };
 
 exports.renderEditUserForm = (req, res) => {
-  const id = req.query.id;
-  dbOperation.findUserById(id).then((data) => {
-    res.render("editUserForm", { user: data[0] });
-  });
+  if (req.session.admin) {
+    const id = req.query.id;
+    dbOperation.findUserById(id).then((data) => {
+      res.render("editUserForm", { user: data[0] });
+    });
+  } else {
+    res.redirect("/admin");
+  }
 };
 
 exports.addUser = (req, res) => {

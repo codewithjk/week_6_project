@@ -44,7 +44,7 @@
                 required
               />
               <% if (locals.invalidEmail) { %>
-              <p class="text-danger"><%= invalidEmail %></p>
+              <p class="text-danger hideError"><%= invalidEmail %></p>
               <% } %>
             </div>
 
@@ -58,4 +58,4 @@
     </div>
   </div>
 </section>
-<% include('foot') %>
+<%- include('foot') -%>

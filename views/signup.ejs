@@ -13,7 +13,7 @@
             <div class="card-body p-5">
               <h2 class="text-uppercase text-center mb-5">Create an account</h2>
 
-              <form action="/register" method="post">
+              <form id="registrationForm" action="/register" method="post">
                 <div class="form-outline mb-4">
                   <label class="form-label" for="form3Example1cg"
                     >Your Name</label
@@ -41,25 +41,23 @@
                 </div>
 
                 <div class="form-outline mb-4">
-                  <label class="form-label" for="form3Example4cg"
-                    >Password</label
-                  >
+                  <label class="form-label" for="password">Password</label>
                   <input
                     name="password"
                     type="password"
-                    id="form3Example4cg"
+                    id="password"
                     class="form-control form-control-lg"
                     required
                   />
                 </div>
 
                 <div class="form-outline mb-4">
-                  <label class="form-label" for="form3Example4cdg"
+                  <label class="form-label" for="confirmPassword"
                     >Repeat your password</label
                   >
                   <input
                     type="password"
-                    id="form3Example4cdg"
+                    id="confirmPassword"
                     class="form-control form-control-lg"
                     required
                   />
