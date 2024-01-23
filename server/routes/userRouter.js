@@ -7,6 +7,7 @@ router.get("/", controller.indexRender);
 router.get("/signup", controller.signupRender);
 router.get("/home", controller.homeRender);
 router.get("/login", controller.loginRender);
+router.get("/logout", controller.logout);
 
 //API
 router.post("/register", controller.create);

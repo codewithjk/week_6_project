@@ -3,6 +3,13 @@
   <h1 class="text-center mb-4">Add User</h1>
   <div class="row d-flex align-items-center justify-content-center">
     <div class="col-3 rounded bg-white">
+      <% if(locals.user){ %>
+
+      <p class="text-success hideError">
+        <%= locals.user.name %>'s data successfuly added
+      </p>
+
+      <% } %>
       <!-- Add User Form -->
       <div class="form-container">
         <form action="/admin/adduser" method="post" novalidate>
@@ -52,7 +59,9 @@
 
           <!-- Submit and Cancel Buttons -->
           <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button id="submit" type="submit" class="btn btn-primary">
+              Submit
+            </button>
             <a href="/admin/dashboard" class="btn btn-secondary">Cancel</a>
           </div>
         </form>
@@ -60,4 +69,5 @@
     </div>
   </div>
 </section>
+
 <%- include('foot') -%>

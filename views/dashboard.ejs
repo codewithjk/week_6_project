@@ -35,9 +35,9 @@
   <% for(let i=0; i<users.length; i++) { %>
     <div class=" row bg-body-secondary my-1 p-1 rounded d-flex align-items-center justify-content-center ">
       <p class="col-2 p-1 m-0 text-start"><%= i + 1 %></p>
-      <p class="col-2 p-1 m-0 text-start"><%= users[i].name %></p>
-      <p class="col-2 p-1 m-0 text-start"><%= users[i].email %></p>
-      <p class="col-2 p-1 m-0 text-start"><%= users[i].password %></p>
+      <p class="col-2 p-1 m-0 text-start text-truncate"><%= users[i].name %></p>
+      <p class="col-2 p-1 m-0 text-start text-truncate"><%= users[i].email %></p>
+      <p class="col-2 p-1 m-0 text-start text-truncate"><%= users[i].password %></p>
 
       <!-- User Actions -->
       

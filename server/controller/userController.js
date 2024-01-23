@@ -1,13 +1,15 @@
 const model = require("../model/model");
 const dbOperation = require("../database/dboperations");
-const User = model.user;
+const bcrypt = require("bcrypt");
+
 //User registration
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   const user = {
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
+    password: await bcrypt.hash(req.body.password, 13),
   };
+
   dbOperation
     .createUser(user)
     .then((data) => {
@@ -30,29 +32,37 @@ exports.create = (req, res) => {
 };
 
 //User login
-exports.login = (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  dbOperation
-    .findUserByEmail(email)
-    .then((data) => {
-      if (data.length < 1) {
-        res.render("index", { invalidEmail: "email not found" });
-      } else {
-        if (password === data[0].password) {
-          // res.send(data[0].password);
-          req.session.isLoggedIn = true;
-          req.session.user = data[0];
-          res.redirect("/home");
-          res.end();
+exports.login = async (req, res) => {
+  if (req.session.user) {
+    res.redirect("/home");
+  } else {
+    const email = req.body.email;
+    const password = req.body.password;
+    dbOperation
+      .findUserByEmail(email)
+      .then((data) => {
+        if (data.length < 1) {
+          res.render("index", { invalidEmail: "email not found" });
         } else {
-          res.render("index", { invalidEmail: "Invalid password" });
+          bcrypt.compare(password, data[0].password).then((isUser) => {
+            if (isUser) {
+              req.session.isLoggedIn = true;
+              req.session.user = data[0];
+              res.redirect("/home");
+              res.end();
+            } else {
+              res.render("index", { invalidEmail: "Invalid password" });
+              res.end();
+            }
+          });
         }
-      }
-    })
-    .catch((error) => {
-      throw error;
-    });
+      })
+      .catch((error) => {
+        res.status(500).send({
+          message: err.message || "server error",
+        });
+      });
+  }
 };
 
 exports.indexRender = (req, res) => {
@@ -82,4 +92,17 @@ exports.loginRender = (req, res) => {
   } else {
     res.redirect("/");
   }
+};
+
+//user logout
+exports.logout = (req, res) => {
+  req.session.destroy((error) => {
+    if (error) {
+      res.send(error);
+      res.end();
+    } else {
+      res.redirect("/");
+      res.end();
+    }
+  });
 };

@@ -1,18 +1,3 @@
-// document.addEventListener("click", function (event) {
-//   // Check if the clicked element is a button
-//   if (event.target.tagName === "BUTTON") {
-//     const buttonId = event.target.id;
-
-//     switch (buttonId) {
-//       //   case "btn-login":
-//       //     window.location.href = "/login";
-//       //     break;
-//       case "btn-logout":
-//         window.location.href = "/logout";
-//         break;
-//     }
-//   }
-// });
 document.addEventListener("click", (event) => {
   if (event.target.tagName === "INPUT") {
     var paragraph = document.querySelector(".hideError");
@@ -21,24 +6,6 @@ document.addEventListener("click", (event) => {
     }
   }
 });
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   var searchbar = document.querySelector(".searchbar");
-//   if (searchbar) {
-//     searchbar.addEventListener("mouseenter", function () {
-//       var paragraph = document.querySelector(".hideError");
-//       if (paragraph) {
-//         paragraph.classList.add("d-none");
-//       }
-//     });
-//     searchbar.addEventListener("mouseleave", function () {
-//       var paragraph = document.querySelector(".hideError");
-//       if (paragraph) {
-//         paragraph.classList.remove("d-none");
-//       }
-//     });
-//   }
-// });
 
 // Get the search input and search link
 var searchInput = document.getElementById("searchInput");
@@ -55,24 +22,18 @@ if (searchLink) {
   });
 }
 
-//registration form validation
-document
-  .getElementById("registrationForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
+// Disable submit button by default
+if (document.getElementById("submitBtn")) {
+  document.getElementById("submitBtn").disabled = true;
 
-    var password = document.getElementById("password").value;
-    var confirmPassword = document.getElementById("confirmPassword").value;
-    console.log(password);
-    console.log(confirmPassword);
+  // Enable submit button only when passwords match
+  document
+    .getElementById("confirmPassword")
+    .addEventListener("input", function () {
+      var password = document.getElementById("password").value;
+      var confirmPassword = this.value;
 
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-    } else {
-      // Passwords match, you can proceed with form submission or other actions
-      alert("Form submitted successfully!");
-      // Uncomment the following line to submit the form programmatically
-      // this.submit();
-    }
-  });
+      document.getElementById("submitBtn").disabled =
+        password !== confirmPassword;
+    });
+}

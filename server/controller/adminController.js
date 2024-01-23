@@ -1,4 +1,5 @@
 const dbOperation = require("../database/dboperations");
+const bcrypt = require("bcrypt");
 
 exports.getadmin = (req, res) => {
   if (req.session.admin) {
@@ -33,23 +34,28 @@ exports.dashboardRender = (req, res) => {
   }
 };
 
-exports.adminLogin = (req, res) => {
+exports.adminLogin = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   dbOperation
     .findAdminByEmail(email)
     .then((data) => {
-      if (password === data[0].password) {
-        // res.send(data[0].password);
-        req.session.isLoggedIn = true;
-        req.session.admin = data[0];
-        res.redirect("/admin/dashboard");
-      } else {
-        res.render("index", { invalidEmail: "Invalid password" });
-      }
+      bcrypt.compare(password, data[0].password).then((isAdmin) => {
+        console.log(data[0].password);
+        console.log(isAdmin);
+        if (isAdmin) {
+          req.session.isLoggedIn = true;
+          req.session.admin = data[0];
+          res.redirect("/admin/dashboard");
+        } else {
+          res.render("adminLogin", { invalidEmail: "Invalid password" });
+        }
+      });
     })
     .catch((error) => {
-      throw error;
+      res.status(500).send({
+        message: err.message || "server error",
+      });
     });
 };
 
@@ -72,18 +78,19 @@ exports.renderEditUserForm = (req, res) => {
   }
 };
 
-exports.addUser = (req, res) => {
+exports.addUser = async (req, res) => {
   const user = {
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
+    password: await bcrypt.hash(req.body.password, 13),
   };
   dbOperation
     .createUser(user)
     .then((data) => {
-      req.session.isLoggedIn = true;
-      req.session.user = data;
-      res.redirect("/admin/adduser");
+      // req.session.isLoggedIn = true;
+      // req.session.user = data;
+      // res.redirect("/admin/adduser");
+      res.render("addUserForm", { user: data });
     })
     .catch((err) => {
       if (err.code == 11000) {
@@ -96,12 +103,12 @@ exports.addUser = (req, res) => {
     });
 };
 
-exports.editUser = (req, res) => {
+exports.editUser = async (req, res) => {
   const id = req.query.id;
   const user = {
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
+    password: await bcrypt.hash(req.body.password, 13),
   };
 
   dbOperation.updateUser(id, user).then((data) => {
